@@ -1,37 +1,29 @@
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
-
 #include <stdio.h>
 #include <stdlib.h>
 
-// 进程控制块 (PCB)
+typedef enum { NEW, READY, RUNNING, WAITING, TERMINATED } ProcessState;
+
 typedef struct {
-    int pid;                // 进程ID
-    int arrival_time;       // 到达时间
-    int burst_time;         // CPU执行时间
-    int remaining_time;     // 剩余执行时间
-    int completion_time;    // 完成时间
-    int turnaround_time;    // 周转时间
-    int waiting_time;       // 等待时间
-    int start_time;         // 开始执行时间
+    int pid;
+    ProcessState state;
+    int priority;
+    int arrival_time;
+    int burst_time;
+    int remaining_time;
+    int completion_time;
+    int turnaround_time;
+    int waiting_time;
+    int start_time;
 } Process;
 
-// 计算平均等待时间
-float calculate_avg_waiting_time(Process processes[], int n);
-
-// 计算平均周转时间
-float calculate_avg_turnaround_time(Process processes[], int n);
-
-// FCFS 调度算法
-void calculate_fcfs(Process processes[], int n);
-
-// Round Robin 调度算法
-void calculate_round_robin(Process processes[], int n, int quantum);
-
-// 打印进程信息
-void print_processes(Process processes[], int n);
-
-// 打印 Gantt 图
-void print_gantt_chart(Process processes[], int n, int *gantt_order, int gantt_size);
-
+const char* state_name(ProcessState s);
+void log_state_change(Process *p, ProcessState old_st, ProcessState new_st);
+float calc_avg_waiting(Process p[], int n);
+float calc_avg_turnaround(Process p[], int n);
+void calculate_fcfs(Process p[], int n);
+void calculate_rr(Process p[], int n, int quantum);
+void print_processes(Process p[], int n);
+void print_gantt(Process p[], int n, int *order, int size);
 #endif

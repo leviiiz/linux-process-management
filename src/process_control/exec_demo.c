@@ -1,29 +1,30 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <windows.h>
 
 int main() {
-    printf("=== 进程控制：exec() 演示 ===\n\n");
-    
+    printf("========================================\n");
+    printf("  Process Control: exec() Demo\n");
+    printf("========================================\n\n");
+
     STARTUPINFO si = {sizeof(si)};
     PROCESS_INFORMATION pi;
-    
-    printf("[父进程] 创建子进程执行 dir 命令...\n");
-    
+
+    printf("[Parent] Creating child process to run 'dir'...\n");
+
     BOOL success = CreateProcess(
         "C:\\Windows\\System32\\cmd.exe",
         "cmd.exe /c dir",
         NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi
     );
-    
+
     if (success) {
         WaitForSingleObject(pi.hProcess, INFINITE);
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);
-        printf("[父进程] 子进程完成\n");
+        printf("[Parent] Child process completed\n");
     } else {
-        printf("创建进程失败，错误码: %lu\n", GetLastError());
+        printf("ERROR: CreateProcess failed (code: %lu)\n", GetLastError());
     }
-    
+
     return 0;
 }
